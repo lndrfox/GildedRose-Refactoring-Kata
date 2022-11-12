@@ -1,4 +1,5 @@
-import { Item, GildedRose } from '@/gilded-rose';
+import { GildedRose } from '@/gilded-rose';
+import {Item} from "@/item";
 
 describe('Gilded Rose', () => {
   describe('Adding item', () => {
@@ -31,6 +32,12 @@ describe('Gilded Rose', () => {
       gildedRose.updateQuality();
       gildedRose.updateQuality();
       expect(gildedRose.items[0].quality).toBe(0);
+    });
+
+    it('should decrease sellIn under 0', () => {
+      const gildedRose = new GildedRose([new Item('foo', 0, 1)]);
+      gildedRose.updateQuality();
+      expect(gildedRose.items[0].sellIn).toBe(-1);
     });
 
     it('should decrease quality twice as fast after sellIn is 0', () => {
@@ -67,6 +74,14 @@ describe('Gilded Rose', () => {
         gildedRose.updateQuality();
         expect(gildedRose.items[0].quality).toBe(80);
       });
+
+      it('should not decrease sellIn days', () => {
+        const gildedRose = new GildedRose([new Item('Sulfuras, Hand of Ragnaros', 1, 80)]);
+        gildedRose.updateQuality();
+        expect(gildedRose.items[0].sellIn).toBe(1);
+      });
+
+
 
       it('should not decrease in quality when there are no sellIn days left', () => {
         const gildedRose = new GildedRose([new Item('Sulfuras, Hand of Ragnaros', 0, 80)]);
