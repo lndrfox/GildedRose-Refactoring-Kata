@@ -8,6 +8,8 @@ export function updateItem(item: Item) {
       updateQualityAgedBrieItem(item);
     } else if(item.name == 'Backstage passes to a TAFKAL80ETC concert'){
       updateQualityBackstagePassesItem(item);
+    } else if (isConjuredItem(item)){
+      updateQualityConjuredItem(item);
     } else {
       updateQualityGenericItem(item);
     }
@@ -19,9 +21,18 @@ export function updateItem(item: Item) {
 const MIN_QUALITY = 0;
 const MAX_QUALITY = 50;
 
+const GENERIC_ITEM_DECREASE_VALUE = 1 ;
+const GENERIC_ITEM_DECREASE_VALUE_AFTER_SELL_IN = GENERIC_ITEM_DECREASE_VALUE * 2;
+
+const AGED_BRIE_INCREASE_VALUE = GENERIC_ITEM_DECREASE_VALUE ;
+const AGED_BRIE_INCREASE_VALUE_AFTER_SELL_IN = GENERIC_ITEM_DECREASE_VALUE * 2;
+
+const CONJURED_ITEM_DECREASE_VALUE = GENERIC_ITEM_DECREASE_VALUE *2 ;
+const CONJURED_ITEM_DECREASE_VALUE_AFTER_SELL_IN = GENERIC_ITEM_DECREASE_VALUE_AFTER_SELL_IN * 2;
+
 /* GENERIC HELPER FUNCTIONS */
 
-function shouldBeUpdated(item :Item){
+function shouldBeUpdated(item :Item) : boolean{
   return item.name != 'Sulfuras, Hand of Ragnaros';
 }
 
@@ -43,7 +54,7 @@ function dropQualityToMin (item : Item){
   item.quality = MIN_QUALITY;
 }
 
-function sellDatePassed(item : Item){
+function sellDatePassed(item : Item) :boolean{
   return item.sellIn <= 0;
 }
 
@@ -51,9 +62,9 @@ function sellDatePassed(item : Item){
 
 function updateQualityGenericItem(item : Item){
   if(sellDatePassed(item)) {
-    decreaseQualityBy(item, 2);
+    decreaseQualityBy(item, GENERIC_ITEM_DECREASE_VALUE_AFTER_SELL_IN);
   } else {
-    decreaseQualityBy(item, 1);
+    decreaseQualityBy(item, GENERIC_ITEM_DECREASE_VALUE);
   }
 }
 
@@ -61,9 +72,9 @@ function updateQualityGenericItem(item : Item){
 
 function updateQualityAgedBrieItem(item : Item){
   if(sellDatePassed(item)) {
-    increaseQualityBy(item, 2);
+    increaseQualityBy(item, AGED_BRIE_INCREASE_VALUE_AFTER_SELL_IN);
   } else {
-    increaseQualityBy(item, 1);
+    increaseQualityBy(item, AGED_BRIE_INCREASE_VALUE);
   }
 }
 
@@ -80,3 +91,18 @@ function updateQualityBackstagePassesItem(item : Item){
     increaseQualityBy(item, 3);
   }
 }
+
+/* CONJURED ITEM HELPER FUNCTIONS */
+
+function updateQualityConjuredItem(item : Item){
+  if(sellDatePassed(item)) {
+    decreaseQualityBy(item, CONJURED_ITEM_DECREASE_VALUE_AFTER_SELL_IN);
+  } else {
+    decreaseQualityBy(item, CONJURED_ITEM_DECREASE_VALUE);
+  }
+}
+
+function isConjuredItem(item : Item) : boolean{
+  return item.name.startsWith('Conjured');
+}
+

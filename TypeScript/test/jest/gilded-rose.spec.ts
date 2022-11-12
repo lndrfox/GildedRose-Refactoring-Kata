@@ -81,8 +81,6 @@ describe('Gilded Rose', () => {
         expect(gildedRose.items[0].sellIn).toBe(1);
       });
 
-
-
       it('should not decrease in quality when there are no sellIn days left', () => {
         const gildedRose = new GildedRose([new Item('Sulfuras, Hand of Ragnaros', 0, 80)]);
         gildedRose.updateQuality();
@@ -123,6 +121,22 @@ describe('Gilded Rose', () => {
       });
 
     });
+    describe('Conjured items behavior', () => {
+
+      it('should decrease in quality twice as fast than normal items when sellIn is not passed', () => {
+        const gildedRose = new GildedRose([new Item('Conjured Mana Cake', 2, 2)]);
+        gildedRose.updateQuality();
+        expect(gildedRose.items[0].quality).toBe(0);
+      });
+
+      it('should decrease in quality twice as fast than normal items when sellIn is passed', () => {
+        const gildedRose = new GildedRose([new Item('Conjured Mana Cake', 0, 6)]);
+        gildedRose.updateQuality();
+        expect(gildedRose.items[0].quality).toBe(2);
+      });
+
+    });
+
   });
 });
 

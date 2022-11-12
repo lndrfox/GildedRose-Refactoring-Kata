@@ -1,5 +1,5 @@
 import {Item} from "@/item";
-import {updateItem} from "@/update.quality.helper";
+import {updateItem} from "./update.quality.helper";
 
 export class GildedRose {
   items: Array<Item>;
